@@ -22,8 +22,8 @@ let modifiedCsvJson = [];
  * Global config.
  */
 const config = {
-  inputFile: './input/input-file.csv',
-  outputFile: './output/output-file-to-be-created.csv',
+  inputFile: './input/hevydata.csv',
+  outputFile: './output/hevy-good.csv',
 };
 
 /**
@@ -38,28 +38,52 @@ const csvWriter = createCsvWriter({
   path: config.outputFile,
   header: [
     {
-      id: 'Year',
-      title: 'Year'
+      id: 'Date',
+      title: 'Date'
     },
     {
-      id: 'Artist',
-      title: 'Artist'
+      id: 'Workout Name',
+      title: 'Workout Name'
     },
     {
-      id: 'Album',
-      title: 'Album Name'
+      id: 'Duration',
+      title: 'Duration'
     },
     {
-      id: 'Label',
-      title: 'Label'
+      id: 'Exercise Name',
+      title: 'Exercise Name'
     },
     {
-      id: 'Certified Units',
-      title: 'Certified Units'
+      id: 'Set Order',
+      title: 'Set Order'
     },
     {
-      id: 'Certification',
-      title: 'Certification'
+      id: 'Weight',
+      title: 'Weight'
+    },
+    {
+      id: 'Reps',
+      title: 'Reps'
+    },
+    {
+      id: 'Distance',
+      title: 'Distance'
+    },
+    {
+      id: 'Seconds',
+      title: 'Seconds'
+    },
+    {
+      id: 'Notes',
+      title: 'Notes'
+    },
+    {
+      id: 'Workout Notes',
+      title: 'Workout Notes'
+    },
+    {
+      id: 'RPE',
+      title: 'RPE'
     },
   ],
   alwaysQuote: true,
@@ -90,8 +114,7 @@ function init() {
 function initFunctions() {
   console.log('Initiating script functionality...');
 
-  modifyCertifiedUnits();
-  filterAlbumYears();
+  modifyTimestamp();
 
   /**
    * Once everything is finished, write to file.
@@ -100,31 +123,16 @@ function initFunctions() {
 }
 
 /**
- * Function that will remove items that don't match our desired years.
+ * Function that will modify the timestamp for each workout
  */
-function filterAlbumYears() {
-  console.log('Removing items released in 2015');
-
-  modifiedCsvJson = modifiedCsvJson.filter((item) => {
-    return item['Year'] === '2015' ? null : item
-  });
-
-  console.log('...Done');
-}
-
-/**
- * Removes the parenthesis from the 'Certified Units' field.
- */
-function modifyCertifiedUnits() {
-  console.log('Removing parenthesis from Units Sold...')
+function modifyTimestamp() {
+  console.log('Matching timestamp for each workout filtered by date');
 
   modifiedCsvJson = modifiedCsvJson.map((item) => {
-    const returnedItem = item
-    const itemKey = 'Certified Units'
+    const itemKey = 'Date'
+    item[itemKey] = item[itemKey].replace(/ .*/, ' 12:00:00');
 
-    returnedItem[itemKey] = item[itemKey].replace(/[{()}]/g, '');
-
-    return returnedItem
+    return item
   })
 
   console.log('...Done');
